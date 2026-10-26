@@ -1,0 +1,21 @@
+.section-title > input { border: 1px solid var(--line); border-radius: 9px; padding: 11px; min-width: 260px; }
+.users { display: grid; gap: 10px; margin-top: 20px; }
+.user-row { background: white; border: 1px solid var(--line); border-radius: 13px; padding: 15px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 15px; align-items: center; }
+.user-row small { color: #718085; }
+.membership { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.membership span { background: #e2f3ec; padding: 5px 8px; border-radius: 999px; font-size: 12px; }
+.membership span.lead { background: #ffe1dc; }
+.assign { display: flex; gap: 7px; align-items: center; }
+.assign select { flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 9px; }
+.assign label { font-size: 12px; white-space: nowrap; }
+.assign button { border: 0; background: var(--nav); color: white; border-radius: 8px; padding: 9px; }
+.map-legend { background: white; padding: 10px; border-radius: 9px; box-shadow: 0 2px 12px #1233; line-height: 1.7; }
+.map-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+.date-sort { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-top: 10px; padding: 12px; background: white; border: 1px solid var(--line); border-radius: 12px; }
+.date-sort label { display: grid; gap: 5px; font-size: 12px; font-weight: 750; }
+.date-sort input,.date-sort select { border: 1px solid var(--line); border-radius: 8px; padding: 9px; background: white; }
+.date-sort button { border: 0; border-radius: 8px; padding: 10px; cursor: pointer; }
+.secure-whatsapp { display: inline-block; margin-top: 8px; color: #087b45; font-size: 13px; font-weight: 800; text-decoration: none; }
+.zone-marker { border: 3px solid white; border-radius: 50% 50% 50% 8px; color: white; display: grid; place-items: center; font-weight: 900; box-shadow: 0 4px 14px #1238; transform: rotate(-45deg); }
+.zone-marker span { transform: rotate(45deg); }
+@media(max-width:850px){.user-row{grid-template-columns:1fr}.section-title{align-items:flex-start;gap:10px;flex-direction:column}}

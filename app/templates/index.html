@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#073b4c">
+  <meta name="description" content="Sutura, les alertes utiles de votre quartier à Dakar.">
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <link rel="stylesheet" href="/static/css/leaflet-local.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/map.css">
+  <title>Sutura — Alertes de quartier</title>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#feed" aria-label="Accueil Sutura"><span>S</span> Sutura</a>
+    <button id="profileButton" class="icon-button" aria-label="Ouvrir mon profil">👤</button>
+  </header>
+
+  <main>
+    <section id="authView" class="auth-view" hidden>
+      <div class="auth-card">
+        <p class="eyebrow">Bienvenue à bord</p>
+        <h1>Les infos utiles, juste autour de vous.</h1>
+        <p>Entrez votre numéro mobile sénégalais. Aucun mot de passe à retenir.</p>
+        <form id="phoneForm">
+          <label for="telephone">Numéro de téléphone</label>
+          <div class="phone-field"><span>🇸🇳 +221</span><input id="telephone" inputmode="numeric" autocomplete="tel" maxlength="9" placeholder="77 123 45 67" required></div>
+          <button class="primary full" type="submit">Recevoir mon code</button>
+        </form>
+        <form id="otpForm" hidden>
+          <label for="otp">Code reçu par SMS</label>
+          <input id="otp" class="otp-input" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="••••" required>
+          <small id="devHint"></small>
+          <button class="primary full" type="submit">Me connecter</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="profileView" class="sheet" hidden>
+      <button class="close" data-close aria-label="Fermer">×</button>
+      <h2>Mon profil</h2>
+      <p class="muted">Deux informations, et c’est tout.</p>
+      <form id="profileForm">
+        <label for="pseudo">Prénom ou pseudo</label>
+        <input id="pseudo" maxlength="50" placeholder="Awa" required>
+        <label for="quartierProfile">Mon quartier</label>
+        <select id="quartierProfile" required></select>
+        <button class="primary full" type="submit">Enregistrer</button>
+        <a id="adminLink" class="admin-link" href="/admin" hidden>Ouvrir le backoffice</a>
+        <a id="workLink" class="admin-link" href="/traitement" hidden>Mes alertes à traiter</a>
+        <button id="myAlertsButton" class="secondary full" type="button">Voir mes alertes déclarées</button>
+        <button id="logoutButton" class="text-button" type="button">Me déconnecter</button>
+      </form>
+    </section>
+
+    <section id="feedView" class="content" hidden>
+      <div class="welcome"><div><p class="eyebrow">Bonjour <span id="welcomeName">voisin·e</span></p><h1>Que se passe-t-il près de chez vous ?</h1></div><div class="live-dot" title="Alertes actives"></div></div>
+      <div class="scope-tabs" role="tablist">
+        <button class="active" data-scope="quartier" role="tab">Mon quartier</button>
+        <button data-scope="global" role="tab">Tout Dakar</button>
+      </div>
+      <p id="currentArea" class="current-area">📍 Localisation du quartier en cours…</p>
+      <div id="categoryFilters" class="category-filters" aria-label="Filtrer par catégorie"></div>
+      <div id="offlineBanner" class="offline-banner" hidden>Mode hors ligne — dernières alertes enregistrées</div>
+      <div id="alertList" class="alert-list"></div>
+      <div id="emptyState" class="empty" hidden><span>🌤️</span><h2>Tout est calme ici</h2><p>Aucune alerte active pour ce filtre.</p></div>
+    </section>
+
+    <section id="createView" class="sheet" hidden>
+      <button class="close" data-close aria-label="Fermer">×</button>
+      <p class="eyebrow">Nouvelle alerte</p><h2>Prévenez le quartier</h2>
+      <form id="alertForm">
+        <fieldset><legend>Que se passe-t-il ?</legend><div id="categoryGrid" class="category-grid"></div></fieldset>
+        <label for="quartierAlert">Quartier détecté automatiquement</label><input id="quartierAlert" readonly required placeholder="Sélectionnez une position sur la carte">
+        <div class="map-heading"><label>Position exacte <small>facultatif</small></label><button id="locateButton" class="map-locate" type="button">⌖ Ma position</button></div>
+        <p class="map-help">Touchez la carte pour placer le repère, puis déplacez-le si nécessaire.</p>
+        <div id="locationMap" class="location-map" aria-label="Carte de sélection de la position"></div>
+        <div id="coordinatesLabel" class="coordinates">Aucune position précise sélectionnée</div>
+        <button id="clearLocationButton" class="text-button compact" type="button" hidden>Retirer la position</button>
+        <label for="description">Description <span id="charCount">0/280</span></label>
+        <textarea id="description" maxlength="280" rows="4" placeholder="Décrivez l'incident simplement…" required></textarea>
+        <label class="photo-picker" for="photo"><span>📷</span><span><strong>Ajouter une photo</strong><small>Optionnel · compressée avant envoi</small></span></label>
+        <input id="photo" type="file" accept="image/*" capture="environment" hidden>
+        <label class="check-row"><input id="whatsapp" type="checkbox"><span>Rendre mon numéro WhatsApp joignable</span></label>
+        <button class="primary full" type="submit">Publier l’alerte</button>
+      </form>
+    </section>
+  </main>
+
+  <button id="createButton" class="fab" aria-label="Créer une alerte" hidden>＋</button>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>
